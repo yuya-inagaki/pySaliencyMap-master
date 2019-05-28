@@ -1,0 +1,10 @@
+# 重み付け箇所
+        salient_level_weight = (end_x - start_x) * (end_y - start_y)
+        if salient_level_weight > 1000:
+            salient_level_num = average_color[0]
+        elif salient_level_weight > 800:
+            salient_level_num = average_color[0]-50
+        elif salient_level_weight > 500:
+            salient_level_num = average_color[0]-100
+        else:
+            salient_level_num = average_color[0]-150
