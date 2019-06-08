@@ -6745,3 +6745,10 @@ JavaScript error: , line 0: uncaught exception: null
 1559536035526	Marionette	INFO	Listening on port 65357
 1559536035638	Marionette	WARN	TLS certificate errors will be ignored for this session
 1559536056467	Marionette	INFO	Stopped listening on port 65357
+1559987214465	mozrunner::runner	INFO	Running command: "/Applications/Firefox.app/Contents/MacOS/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/var/folders/mv/dm5x8s9s6mn1197m6ng4547h0000gn/T/rust_mozprofile.yFHH7PisIDXa"
+1559987215212	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: mozillaAddons
+1559987215212	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: resource://pdf.js/
+1559987215212	addons.webextension.screenshots@mozilla.org	WARN	Loading extension 'screenshots@mozilla.org': Reading manifest: Invalid extension permission: about:reader*
+1559987217097	Marionette	INFO	Listening on port 52930
+1559987217173	Marionette	WARN	TLS certificate errors will be ignored for this session
+1559987238999	Marionette	INFO	Stopped listening on port 52930
