@@ -210,7 +210,6 @@ if __name__ == '__main__':
     csvWriter2 = csv.writer(tag_list_custom)
     csvWriter2.writerow(["class or id", "tag_name", "start_x", "start_y", "size_w", "size_h", "average_color", "salient_level"])
 
-
     # divのclassとidを取得
     print("Getting position and size of //div[@id]")
     tags_id = driver.find_elements_by_xpath("//div[@id]")
@@ -224,6 +223,9 @@ if __name__ == '__main__':
             start_y = tag_id.location['y']
             size_w = tag_id.size['width']
             size_h = tag_id.size['height']
+
+            # text = tag_id.text
+            # print(text)
 
             saliency_level = calc_salient_level(start_x, start_y, size_w, size_h, 'tag_id') #顕著度の計算
 
