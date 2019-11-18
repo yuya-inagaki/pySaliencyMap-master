@@ -129,25 +129,32 @@ if __name__ == '__main__':
     # ページ読み込み完了まで待機
     input("アニメーション等の読み込みが完了したらEnterを押してください\n")
 
-    driver.save_screenshot('working/screenshot-firefox1.png')
+    mode = -1
+    while(mode != 0 and mode != 1) :
+        mode = int(input("0: 最上部のみ, 1: スクリーン２枚分"))
 
-    if page_height > scrollHeight*2 :
-        driver.execute_script("window.scrollTo(0, "+str(scrollHeight)+");")
-        driver.save_screenshot('working/screenshot-firefox2.png')
+    if mode == 1:
+        driver.save_screenshot('working/screenshot-firefox1.png')
 
-        im1 = Image.open('working/screenshot-firefox1.png')
-        im2 = Image.open('working/screenshot-firefox2.png')
-        get_concat_v(im1, im2).save('./working/screen-pc.png')
+        if page_height > scrollHeight*2 :
+            driver.execute_script("window.scrollTo(0, "+str(scrollHeight)+");")
+            driver.save_screenshot('working/screenshot-firefox2.png')
 
-    elif page_height > scrollHeight :
-        driver.execute_script("window.scrollTo(0, "+str(page_height - scrollHeight)+");")
-        driver.save_screenshot('working/screenshot-firefox2.png')
+            im1 = Image.open('working/screenshot-firefox1.png')
+            im2 = Image.open('working/screenshot-firefox2.png')
+            get_concat_v(im1, im2).save('./working/screen-pc.png')
 
-        im1 = Image.open('working/screenshot-firefox1.png')
-        im2 = Image.open('working/screenshot-firefox2.png')
-        get_concat_v(im1, im2).save('./working/screen-pc.png')
+        elif page_height > scrollHeight :
+            driver.execute_script("window.scrollTo(0, "+str(page_height - scrollHeight)+");")
+            driver.save_screenshot('working/screenshot-firefox2.png')
 
-    else :
+            im1 = Image.open('working/screenshot-firefox1.png')
+            im2 = Image.open('working/screenshot-firefox2.png')
+            get_concat_v(im1, im2).save('./working/screen-pc.png')
+
+        else :
+            driver.save_screenshot('./working/screen-pc.png')
+    else:
         driver.save_screenshot('./working/screen-pc.png')
 
 
@@ -210,7 +217,6 @@ if __name__ == '__main__':
     csvWriter2 = csv.writer(tag_list_custom)
     csvWriter2.writerow(["class or id", "tag_name", "start_x", "start_y", "size_w", "size_h", "average_color", "salient_level"])
 
-
     # divのclassとidを取得
     print("Getting position and size of //div[@id]")
     tags_id = driver.find_elements_by_xpath("//div[@id]")
@@ -224,6 +230,9 @@ if __name__ == '__main__':
             start_y = tag_id.location['y']
             size_w = tag_id.size['width']
             size_h = tag_id.size['height']
+
+            # text = tag_id.text
+            # print(text)
 
             saliency_level = calc_salient_level(start_x, start_y, size_w, size_h, 'tag_id') #顕著度の計算
 
