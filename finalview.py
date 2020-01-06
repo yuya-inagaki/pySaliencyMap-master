@@ -22,6 +22,8 @@ import re
 #use csv
 import csv
 import pandas as pd
+# 画像のPIP処理
+from PIL import Image
 
 global high_element_list # 顕著度ランキングを格納するリスト
 
@@ -91,7 +93,7 @@ def getHighestSaliency():
                 end_y = height
 
             if (end_x - start_x)/(end_y - start_y) < 10: # あまりにも細長いものを排除
-                clipped = screenshot[start_y:end_y,start_x:end_x]
+                clipped = screenshot[int(start_y):int(end_y),int(start_x):int(end_x)]
                 cv2.imwrite("./working/high-saliency/img"+ str(salient_num_first - salient_num + 1) +".png", clipped ) #Save
                 print("画像出力 & 顕著度高いリストに追加")
                 high_element_list.append(most_salient)
@@ -161,35 +163,47 @@ def getFinalView():
     correction = 30 # 20
 
     # 顕著度の塗りつぶし用関数
-    def printSaliencyColor(i):
+    def printSaliencyColor(i, type):
         start_x = int(tag_list_custom.iat[i, 2])
         start_y = int(tag_list_custom.iat[i, 3])
         end_x = int(tag_list_custom.iat[i, 2]+tag_list_custom.iat[i, 4])
         end_y = int(tag_list_custom.iat[i, 3]+tag_list_custom.iat[i, 5])
         salient_level_num = tag_list_custom.iat[i, 7]
-        if salient_level_num > 0:
-            cv2.rectangle(halfImg_print, (start_x, start_y) , (end_x, end_y), (salient_level_num + correction, salient_level_num + correction, salient_level_num + correction), -1)
+        if type == 'img' and ((end_x - start_x)*(end_y - start_y)) / (width*height) > 0.1 :
+            # 画像の場合のみそのまま貼り付け
+            if start_x < 0 or start_y < 0 or end_x > width or end_y > height:
+                return
+
+            clipped = halfImg[start_y:end_y,start_x:end_x]
+            print(clipped.shape)
+            print(halfImg_print.shape)
+            print(start_x, start_y)
+            halfImg_print[start_y:clipped.shape[0] + start_y, start_x:clipped.shape[1] + start_x] = clipped
+        else :
+            if salient_level_num > 0:
+                cv2.rectangle(halfImg_print, (start_x, start_y) , (end_x, end_y), (salient_level_num + correction, salient_level_num + correction, salient_level_num + correction), -1)
 
 
     for i in range(tag_list_num - 1):
 
         if tag_list_custom.iat[i, 0] == "id" or tag_list.iat[i, 0] == "id_large":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'id')
 
         if tag_list_custom.iat[i, 0] == "class" or tag_list.iat[i, 0] == "class_large":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'class')
 
         if tag_list_custom.iat[i, 0] == "a":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'a')
 
         if tag_list_custom.iat[i, 0] == "span":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'span')
 
+        # 画像のみ特定のサイズより大きい場合そのまま顕著性マップを表示させる
         if tag_list_custom.iat[i, 0] == "img":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'img')
 
         if tag_list_custom.iat[i, 0] == "heading":
-            printSaliencyColor(i)
+            printSaliencyColor(i, 'heading')
 
     cv2.imwrite("./output/final.png", halfImg_print ) #Save
 
