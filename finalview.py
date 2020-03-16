@@ -171,6 +171,8 @@ def getFinalView():
         salient_level_num = tag_list_custom.iat[i, 7]
         if type == 'img' and ((end_x - start_x)*(end_y - start_y)) / (width*height) > 0.1 :
             # 画像の場合のみそのまま貼り付け
+            # memo どちらか一片の長さが64pxを超える画像はそのまま顕著性マップを表示するように修正する
+            # ただし、現状として画像の取得を確実にできていないように思えるためその箇所を検証後実装する
             if start_x < 0 or start_y < 0 or end_x > width or end_y > height:
                 return
 
